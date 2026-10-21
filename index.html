@@ -5,116 +5,328 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhoZat</title>
+
+    <meta
+        name="description"
+        content="WhoZat is a cricket guessing game. Guess the mystery cricketer using clues from each attempt."
+    >
+
+    <title>WhoZat | Guess the Cricketer</title>
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
 
     <!-- Website Header -->
-    <header>
+    <header class="site-header">
         <h2>WhoZat</h2>
+        <p>The Cricket Mystery Game</p>
     </header>
 
     <!-- Main Game Content -->
-    <main>
+    <main id="main-content">
 
         <!-- Game Introduction -->
-        <section class="game-intro">
-            <h1>Guess the Cricketer</h1>
-            <p>Identify the mystery cricketer in 8 guesses!</p>
+        <section class="game-intro" aria-labelledby="game-title">
 
+            <h1 id="game-title">Guess the Cricketer</h1>
+
+            <p>
+                Identify the mystery cricketer in 8 guesses!
+                Each guess reveals clues to help you find
+                the correct player.
+            </p>
+
+            <!-- Remaining Guesses Counter -->
             <div class="guess-counter">
                 <span id="guesses-remaining">8</span>
                 <span>Guesses Remaining</span>
             </div>
+
         </section>
 
         <!-- Player Search -->
-        <section class="search-section">
+        <section class="search-section" aria-label="Player Search">
+
             <label for="player-search">Search Player</label>
 
-            <input
-                type="text"
-                id="player-search"
-                placeholder="Enter a cricketer's name"
-                autocomplete="off"
-                aria-controls="player-suggestions"
-                aria-expanded="false"
-            >
+            <div class="search-container">
 
-            <ul id="player-suggestions" hidden></ul>
-        </section>
+                <input
+                    type="text"
+                    id="player-search"
+                    placeholder="Enter a cricketer's name"
+                    autocomplete="off"
+                    spellcheck="false"
+                    role="combobox"
+                    aria-autocomplete="list"
+                    aria-controls="player-suggestions"
+                    aria-expanded="false"
+                    disabled
+                >
 
-        <!-- Game Status -->
-        <p id="game-status" role="status" aria-live="polite"></p>
+                <!-- Autocomplete Suggestions -->
+                <ul
+                    id="player-suggestions"
+                    role="listbox"
+                    hidden
+                ></ul>
 
-        <!-- Hint Section -->
-        <section id="hint-section" hidden>
-            <h2>Need a Hint?</h2>
-            <p>
-                After five guesses, reveal one attribute
-                of the mystery cricketer.
+            </div>
+
+            <p id="search-help">
+                Start typing a name and select a player
+                from the suggestions.
             </p>
 
-            <label for="hint-choice">Choose an attribute:</label>
+        </section>
 
-            <select id="hint-choice">
-                <option value="">Select an attribute</option>
+        <!-- Database Loading Status -->
+        <div class="database-info">
+
+            <p id="database-status" role="status" aria-live="polite">
+                Loading player database...
+            </p>
+
+            <p id="player-count">
+                Players available: --
+            </p>
+
+        </div>
+
+        <!-- Game Status -->
+        <p
+            id="game-status"
+            role="status"
+            aria-live="polite"
+        ></p>
+
+        <!-- Hint Section -->
+        <section
+            id="hint-section"
+            aria-labelledby="hint-title"
+            hidden
+        >
+
+            <h2 id="hint-title">Need a Hint?</h2>
+
+            <p>
+                After five guesses, you can reveal one
+                attribute of the mystery cricketer.
+                Only one hint is available per round.
+            </p>
+
+            <label for="hint-choice">
+                Choose an attribute:
+            </label>
+
+            <select id="hint-choice" disabled>
+                <option value="">
+                    Select an attribute
+                </option>
             </select>
 
-            <button type="button" id="reveal-hint-btn">
+            <button
+                type="button"
+                id="reveal-hint-btn"
+                disabled
+            >
                 Reveal Hint
             </button>
 
-            <p id="hint-result" role="status" hidden></p>
+            <!-- Revealed Hint -->
+            <p
+                id="hint-result"
+                role="status"
+                hidden
+            ></p>
+
         </section>
 
         <!-- Previous Guesses -->
-        <section class="results-section"
-                 aria-labelledby="results-heading">
+        <section
+            class="results-section"
+            aria-labelledby="results-heading"
+        >
 
             <h2 id="results-heading">Your Guesses</h2>
 
-            <div id="guess-results">
-                <!-- Generated comparison cards appear here -->
-            </div>
+            <!-- JavaScript will generate comparison cards here -->
+            <div
+                id="guess-results"
+                class="guess-results"
+                aria-label="Previous guesses and their clues"
+            ></div>
 
+            <!-- Empty State -->
             <p id="empty-message">
-                No guesses yet. Search for a cricketer to begin!
+                No guesses yet. Search for a cricketer
+                to begin!
             </p>
+
         </section>
 
-        <!-- Color Legend -->
-        <section class="legend-section"
-                 aria-label="Comparison color legend">
+        <!-- Comparison Color Legend -->
+        <section
+            class="legend-section"
+            aria-label="Comparison color legend"
+        >
 
-            <p>Clue Colors:</p>
+            <h2>Understanding the Clues</h2>
 
-            <ul>
-                <li>Blue - Exact Match</li>
-                <li>Amber - Close Match</li>
-                <li>Gray - No Match</li>
-                <li>Neutral - Missing Data</li>
+            <ul class="color-legend">
+                <li class="exact">
+                    Blue - Exact Match
+                </li>
+
+                <li class="close">
+                    Amber - Close Match or Partial Overlap
+                </li>
+
+                <li class="miss">
+                    Gray - No Match
+                </li>
+
+                <li class="unknown">
+                    Neutral - Missing Data
+                </li>
             </ul>
+
         </section>
 
         <!-- Game Controls -->
         <div class="game-actions">
-            <button type="button" id="new-round-btn">
+
+            <button
+                type="button"
+                id="new-round-btn"
+            >
                 New Round
             </button>
 
-            <button type="button" id="share-result-btn" hidden>
+            <button
+                type="button"
+                id="share-result-btn"
+                hidden
+            >
                 Copy Result
             </button>
+
         </div>
+
+        <!-- How to Play -->
+        <section class="rules-section">
+
+            <details>
+                <summary>How to Play</summary>
+
+                <div class="rules-content">
+
+                    <h3>Objective</h3>
+
+                    <p>
+                        Guess the mystery cricketer within
+                        eight attempts.
+                    </p>
+
+                    <h3>Making a Guess</h3>
+
+                    <ol>
+                        <li>
+                            Search for a cricketer by name.
+                        </li>
+
+                        <li>
+                            Select a player from the suggestions.
+                        </li>
+
+                        <li>
+                            Compare the revealed attributes
+                            against the mystery cricketer.
+                        </li>
+
+                        <li>
+                            Use the clues to narrow down
+                            your next guess.
+                        </li>
+                    </ol>
+
+                    <h3>Understanding the Colors</h3>
+
+                    <ul>
+                        <li>
+                            <strong>Blue:</strong>
+                            The attribute matches exactly.
+                        </li>
+
+                        <li>
+                            <strong>Amber:</strong>
+                            The attribute is close or
+                            partially overlaps.
+                        </li>
+
+                        <li>
+                            <strong>Gray:</strong>
+                            The attribute does not match.
+                        </li>
+
+                        <li>
+                            <strong>Neutral:</strong>
+                            The attribute has missing data.
+                        </li>
+                    </ul>
+
+                    <h3>Age Arrows</h3>
+
+                    <p>
+                        An upward arrow means the mystery
+                        cricketer is older than your guess.
+                        A downward arrow means the mystery
+                        cricketer is younger.
+                    </p>
+
+                    <h3>Hints</h3>
+
+                    <p>
+                        After five unsuccessful guesses,
+                        you may reveal one attribute of
+                        the mystery cricketer.
+                    </p>
+
+                    <h3>New Rounds</h3>
+
+                    <p>
+                        WhoZat supports unlimited rounds.
+                        Click New Round to start another game
+                        with a different mystery cricketer.
+                    </p>
+
+                </div>
+            </details>
+
+        </section>
 
     </main>
 
     <!-- Website Footer -->
-    <footer>
-        <p>&copy; 2026 WhoZat. All rights reserved.</p>
+    <footer class="site-footer">
+
+        <p id="footer-player-count">
+            Player database loading...
+        </p>
+
+        <p>
+            &copy; 2026 WhoZat. All rights reserved.
+        </p>
+
     </footer>
+
+    <!-- JavaScript Files -->
+    <script src="jszip.min.js" defer></script>
+    <script src="xlsx-reader.js" defer></script>
+    <script src="game.js" defer></script>
 
 </body>
 </html>
